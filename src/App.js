@@ -1,23 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
 function App() {
+
+  const [todos, setTodos] = useState([]);
+
+  const [text, setText] = useState("");
+
+
+  const onClickAddTodo = () => {
+    setTodos([...todos, { done: false, text: text }]);
+    setText("");
+  }
+
+
+  const onDone = (text) => {
+    setTodos(todos.map(i => i.text === text ? { done: !i.done, text } : i))
+
+  }
+
+  const onDelete = (text) => {
+    setTodos(todos.filter(i => i.text !== text))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ul>
+        {todos.map(i => <li key={i.text}>
+          
+          <p style={{ textDecoration: i.done ? "line-through" : "", cursor: "pointer" }} onClick={() => onDone(i.text)}>{i.text}</p>
+          <button onClick={() => onDelete(i.text)}>delete</button>
+        </li>)}
+      </ul>
+
+      <input value={text} onChange={e => setText(e.target.value)}></input>
+      <button onClick={onClickAddTodo}> add </button>
     </div>
   );
 }
